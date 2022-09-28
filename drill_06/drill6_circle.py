@@ -6,16 +6,15 @@ open_canvas()
 grass = load_image('grass.png')
 character = load_image('character.png')
 
-x=400
-y=90
-x_angle=0
-y_angle=270
+angle=270
 
 while(True):
     clear_canvas_now()
     grass.draw_now(400,30)
+    x = 400 + (250*(math.cos(angle/360*2*math.pi)))
+    y = 340 + (250*(math.sin(angle/360*2*math.pi)))
     character.draw_now(x,y)
-
-    delay(1)
+    angle = angle + 2
+    delay(0.001)
 
 close_canvas()

@@ -3,7 +3,8 @@ from pico2d import *
 
 def handle_events():
     global running
-    global dir
+    global dirrl
+    global dirud
 
     events = get_events()
     for event in events:
@@ -11,24 +12,24 @@ def handle_events():
             running = False
         elif event.type == SDL_KEYDOWN:
             if event.key == SDLK_RIGHT:
-                dir += 2
+                dirrl += 1
             elif event.key == SDLK_LEFT:
-                dir -= 2
+                dirrl -= 1
             elif event.key == SDLK_UP:
-                dir += 1
+                dirud += 1
             elif event.key == SDLK_DOWN:
-                dir -= 1
+                dirud -= 1
             elif event.key == SDLK_ESCAPE:
                 running = False
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_RIGHT:
-                dir -= 2
+                dirrl -= 1
             elif event.key == SDLK_LEFT:
-                dir += 2
+                dirrl += 1
             elif event.key == SDLK_UP:
-                dir -= 1
+                dirud -= 1
             elif event.key == SDLK_DOWN:
-                dir += 1
+                dirud += 1
     pass
 
 
@@ -39,14 +40,16 @@ character = load_image('animation_sheet.png')
 running = True
 x = 1280 // 2
 y = 1024 // 2
-frame = 0
-dir = 0
+dirrl = 0
+dirud = 0
+rl = 3
 
 
 def running_stop(frame):
+    global rl
     clear_canvas()
     tuk_ground.draw(1280 // 2, 1024 // 2)
-    character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+    character.clip_draw(frame * 100, 100 * rl, 100, 100, x, y)
     update_canvas()
     delay(0.01)
 
@@ -59,7 +62,7 @@ def running_right(frame):
         character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
         update_canvas()
         frame = (frame + 1) % 8
-        x += dir * 5
+        x += dirrl * 5
         delay(0.01)
 
 
@@ -68,10 +71,10 @@ def running_left(frame):
     for x in range(x, x - 1, -10):
         clear_canvas()
         tuk_ground.draw(1280 // 2, 1024 // 2)
-        character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+        character.clip_draw(frame * 100, 100 * 0, 100, 100, x, y)
         update_canvas()
         frame = (frame - 1) % 8
-        x += dir * 5
+        x += dirrl * 5
         delay(0.01)
 
 
@@ -80,10 +83,10 @@ def running_up(frame):
     for y in range(y, y + 1, 10):
         clear_canvas()
         tuk_ground.draw(1280 // 2, 1024 // 2)
-        character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+        character.clip_draw(frame * 100, 100 * (rl-2), 100, 100, x, y)
         update_canvas()
         frame = (frame + 1) % 8
-        y += dir * 5
+        y += dirud * 5
         delay(0.01)
 
 
@@ -92,30 +95,41 @@ def running_down(frame):
     for y in range(y, y - 1, -10):
         clear_canvas()
         tuk_ground.draw(1280 // 2, 1024 // 2)
-        character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+        character.clip_draw(frame * 100, 100 * (rl-2), 100, 100, x, y)
         update_canvas()
         frame = (frame - 1) % 8
-        y += dir * 5
+        y += dirud * 5
         delay(0.01)
+
 
 while running:
     handle_events()
-    if x == 1280:
+
+    if dirrl == 1:
+        if x == 1280:
+            pass
+        else:
+            running_right(0)
+            if rl == 2:
+                rl += 1
+    elif dirrl == -1:
+        if x == 0:
+            pass
+        else:
+            running_left(0)
+            if rl == 3:
+                rl -= 1
+    elif dirud == 1:
+        if y > 1024:
+            pass
+        else:
+            running_up(0)
+    elif dirud == -1:
+        if y < 0:
+            pass
+        else:
+            running_down(0)
+    elif dirrl == 0 and dirud == 0:
         running_stop(0)
-    elif dir == 2:
-        running_right(0)
-    elif dir == 0:
-        running_stop(0)
-    elif dir == -2:
-        running_left(0)
-    elif dir == 1:
-        running_up(0)
-    elif dir == -1:
-        running_down(0)
-
-
-
-
 
 close_canvas()
-

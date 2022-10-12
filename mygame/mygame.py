@@ -3,9 +3,7 @@ from pico2d import *
 
 def handle_events():
     global running
-    global dirrl
-    global dirud
-
+    global dirrl, dirud
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -33,15 +31,15 @@ def handle_events():
     pass
 
 
-TUK_GROUND_FULL_WIDTH = 3500
-TUK_GROUND_FULL_HEIGHT = 1500
+TUK_GROUND_FULL_WIDTH = 1280
+TUK_GROUND_FULL_HEIGHT = 1024
 open_canvas(TUK_GROUND_FULL_WIDTH, TUK_GROUND_FULL_HEIGHT)
-tuk_ground = load_image('TUK_GROUND_FULL.png')
+tuk_ground = load_image('TUK_GROUND.png')
 character = load_image('animation_sheet.png')
 
 running = True
-x = TUK_GROUND_FULL_WIDTH // 2
-y = TUK_GROUND_FULL_HEIGHT // 2
+character_x = TUK_GROUND_FULL_WIDTH // 2
+character_y = TUK_GROUND_FULL_HEIGHT // 2
 dirrl = 0
 dirud = 0
 rl = 3
@@ -53,95 +51,100 @@ def running_stop():
     global rl
     clear_canvas()
     tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
-    character.clip_draw(frame * 100, 100 * rl, 100, 100, x, y)
+    character.clip_draw(frame * 100, 100 * rl, 100, 100, character_x, character_y)
     update_canvas()
     delay(0.01)
 
 
 def running_right():
     global frame
-    global x, y
-    for x in range(x, x + 1, 20):
+    global character_x, character_y
+    for character_x in range(character_x, character_x + 1, 20):
         clear_canvas()
         tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
-        character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
+        character.clip_draw(frame * 100, 100 * 1, 100, 100, character_x, character_y)
         update_canvas()
         frame = (frame + 1) % 8
-        x += dirrl * 5
-        y += dirud * 5
+        character_x += dirrl * 5
+        character_y += dirud * 5
         delay(0.01)
 
 
 def running_left():
     global frame
-    global x, y
-    for x in range(x, x - 1, -20):
+    global character_x, character_y
+    for character_x in range(character_x, character_x - 1, -20):
         clear_canvas()
         tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
-        character.clip_draw(frame * 100, 100 * 0, 100, 100, x, y)
+        character.clip_draw(frame * 100, 100 * 0, 100, 100, character_x, character_y)
         update_canvas()
         frame = (frame - 1) % 8
-        x += dirrl * 5
-        y += dirud * 5
+        character_x += dirrl * 5
+        character_y += dirud * 5
         delay(0.01)
 
 
 def running_up():
     global frame
-    global x, y
-    for y in range(y, y + 1, 20):
+    global character_x, character_y
+    for character_y in range(character_y, character_y + 1, 20):
         clear_canvas()
         tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
-        character.clip_draw(frame * 100, 100 * (rl-2), 100, 100, x, y)
+        character.clip_draw(frame * 100, 100 * (rl-2), 100, 100, character_x, character_y)
         update_canvas()
         frame = (frame + 1) % 8
-        x += dirrl * 5
-        y += dirud * 5
+        character_x += dirrl * 5
+        character_y += dirud * 5
         delay(0.01)
 
 
 def running_down():
     global frame
-    global x, y
-    for y in range(y, y - 1, -20):
+    global character_x, character_y
+    for character_y in range(character_y, character_y - 1, -20):
         clear_canvas()
         tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
-        character.clip_draw(frame * 100, 100 * (rl-2), 100, 100, x, y)
+        character.clip_draw(frame * 100, 100 * (rl-2), 100, 100, character_x, character_y)
         update_canvas()
         frame = (frame - 1) % 8
-        x += dirrl * 5
-        y += dirud * 5
+        character_x += dirrl * 5
+        character_y += dirud * 5
         delay(0.01)
 
 
-while running:
-    handle_events()
-
+def character_moving():
+    global character_x, character_y
+    global dirrl, dirud, rl
     if dirrl == 1:
-        if x >= 3020:
+        if character_x >= 1280 or character_y <= 0 or character_y >= 1024:
             pass
         else:
             running_right()
             if rl == 2:
                 rl += 1
     elif dirrl == -1:
-        if x == 470:
+        if character_x <= 0 or character_y <= 0 or character_y >= 1024:
             pass
         else:
             running_left()
             if rl == 3:
                 rl -= 1
     elif dirud == 1:
-        if y >= 1470:
+        if character_y >= 1024:
             pass
         else:
             running_up()
     elif dirud == -1:
-        if y <= 30:
+        if character_y <= 0:
             pass
         else:
             running_down()
     elif dirrl == 0 and dirud == 0:
         running_stop()
+
+
+while running:
+    handle_events()
+    character_moving()
 
 close_canvas()

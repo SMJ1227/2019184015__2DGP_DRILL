@@ -95,8 +95,8 @@ def kirby_screaming(frame):
         get_events()
 
 
-kirby_walking_right(0)
-kirby_walking_left(0)
+#kirby_walking_right(0)
+#kirby_walking_left(0)
 kirby_running_right(0)
 kirby_running_left(0)
 kirby_spin_right(0)

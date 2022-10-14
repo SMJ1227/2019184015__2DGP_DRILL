@@ -1,5 +1,5 @@
 from pico2d import *
-
+import random
 
 def handle_events():
     global running
@@ -36,80 +36,84 @@ TUK_GROUND_FULL_HEIGHT = 1024
 open_canvas(TUK_GROUND_FULL_WIDTH, TUK_GROUND_FULL_HEIGHT)
 tuk_ground = load_image('TUK_GROUND.png')
 character = load_image('animation_sheet.png')
+monster = load_image('kirby_running_right.png')
 
 running = True
 character_x = TUK_GROUND_FULL_WIDTH // 2
 character_y = TUK_GROUND_FULL_HEIGHT // 2
+monster_x = random.randint(0,TUK_GROUND_FULL_WIDTH)
+monster_y = random.randint(0,TUK_GROUND_FULL_HEIGHT)
 dirrl = 0
 dirud = 0
 rl = 3
 frame = 0
+t = 0
 
 
 def running_stop():
     global frame
     global rl
-    clear_canvas()
-    tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
+    #clear_canvas()
+    #tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
     character.clip_draw(frame * 100, 100 * rl, 100, 100, character_x, character_y)
-    update_canvas()
-    delay(0.01)
+    #update_canvas()
+    #delay(0.01)
 
 
 def running_right():
     global frame
     global character_x, character_y
     for character_x in range(character_x, character_x + 1, 20):
-        clear_canvas()
-        tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
+        #clear_canvas()
+        #tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
         character.clip_draw(frame * 100, 100 * 1, 100, 100, character_x, character_y)
-        update_canvas()
+        #update_canvas()
         frame = (frame + 1) % 8
         character_x += dirrl * 5
         character_y += dirud * 5
-        delay(0.01)
+        #delay(0.01)
 
 
 def running_left():
     global frame
     global character_x, character_y
     for character_x in range(character_x, character_x - 1, -20):
-        clear_canvas()
-        tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
+        # clear_canvas()
+        # tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
         character.clip_draw(frame * 100, 100 * 0, 100, 100, character_x, character_y)
-        update_canvas()
+        #update_canvas()
         frame = (frame - 1) % 8
         character_x += dirrl * 5
         character_y += dirud * 5
-        delay(0.01)
+        #delay(0.01)
 
 
 def running_up():
     global frame
     global character_x, character_y
     for character_y in range(character_y, character_y + 1, 20):
-        clear_canvas()
-        tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
+        # clear_canvas()
+        # tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
         character.clip_draw(frame * 100, 100 * (rl-2), 100, 100, character_x, character_y)
-        update_canvas()
+        #update_canvas()
         frame = (frame + 1) % 8
         character_x += dirrl * 5
         character_y += dirud * 5
-        delay(0.01)
+        #delay(0.01)
 
 
 def running_down():
     global frame
     global character_x, character_y
     for character_y in range(character_y, character_y - 1, -20):
-        clear_canvas()
-        tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
+        # clear_canvas()
+        # tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
         character.clip_draw(frame * 100, 100 * (rl-2), 100, 100, character_x, character_y)
-        update_canvas()
+        #update_canvas()
         frame = (frame - 1) % 8
         character_x += dirrl * 5
         character_y += dirud * 5
-        delay(0.01)
+        #delay(0.01)
 
 
 def character_moving():
@@ -143,8 +147,28 @@ def character_moving():
         running_stop()
 
 
+def monster_running():
+    global frame, t
+    global monster_x, monster_y
+    global character_x, character_y
+    for x in range(0, 800 + 1, 15):
+        monster_x = (1 - t) * monster_x + t * character_x
+        monster_y = (1 - t) * monster_y + t * character_y
+        monster.clip_draw(frame * 93, 0, 88, 100, monster_x, monster_y)
+        frame = (frame + 1) % 4
+        t += 0.00000005
+        if t >= 1:
+            t -= 1
+
+
+
 while running:
     handle_events()
+    clear_canvas()
+    tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
     character_moving()
+    monster_running()
+    update_canvas()
+    delay(0.03)
 
 close_canvas()

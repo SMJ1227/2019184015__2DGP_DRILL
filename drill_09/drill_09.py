@@ -32,7 +32,7 @@ sx, sy = TUK_WIDTH // 2, TUK_HEIGHT // 2
 x, y = sx, sy
 ax, ay = x, y
 frame = 0
-hide_cursor()
+hide_cursor()   
 t = 0
 dirrl = 0
 

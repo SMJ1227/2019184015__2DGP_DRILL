@@ -39,7 +39,7 @@ TUK_GROUND_FULL_HEIGHT = 1024
 open_canvas(TUK_GROUND_FULL_WIDTH, TUK_GROUND_FULL_HEIGHT)
 tuk_ground = load_image('TUK_GROUND.png')
 character = load_image('animation_sheet.png')
-monster = load_image('kirby_spin_right.png')
+monster = load_image('monster.png')
 target = load_image('target.png')
 hide_cursor()
 
@@ -148,17 +148,15 @@ def character_moving():
     elif dirrl == 0 and dirud == 0:
         running_stop()
 
-def monster_running():
-    global frame, t
+def monster_moving():
+    global t
     global monster_x, monster_y
     global character_x, character_y
     for x in range(0, 800 + 1, 50):
-        clear_canvas()
         monster_x = (1 - t) * monster_x + t * character_x
         monster_y = (1 - t) * monster_y + t * character_y
-        monster.clip_draw(frame * 80, 0, 100, 100, monster_x, monster_y)
-        frame = (frame + 1) % 8
-        t += 0.00000005
+        monster.draw(monster_x, monster_y)
+        t += 0.0000005
         if t >= 1:
             t -= 1
 
@@ -172,6 +170,7 @@ while running:
     tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
     character_moving()
     target_moving()
+    monster_moving()
     update_canvas()
     delay(0.01)
 

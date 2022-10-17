@@ -1,10 +1,12 @@
 from pico2d import *
 import random
+from time import *
 
 def handle_events():
     global running
     global dirrl, dirud
     global mouse_x, mouse_y
+    global bullets
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -20,6 +22,9 @@ def handle_events():
                 dirud -= 1
             elif event.key == SDLK_ESCAPE:
                 running = False
+            elif event.key == SDLK_r:
+                bullet_reloading()
+
         elif event.type == SDL_KEYUP:
             if event.key == SDLK_d or event.key == SDLK_RIGHT:
                 dirrl -= 1
@@ -31,6 +36,8 @@ def handle_events():
                 dirud += 1
         elif event.type == SDL_MOUSEMOTION:
             mouse_x, mouse_y = event.x, TUK_GROUND_FULL_HEIGHT - 1 - event.y
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+            bullets -= 1
     pass
 
 
@@ -41,6 +48,7 @@ tuk_ground = load_image('TUK_GROUND.png')
 character = load_image('animation_sheet.png')
 monster = load_image('monster.png')
 target = load_image('target.png')
+bullet = load_image('character.png')
 hide_cursor()
 
 running = True
@@ -50,12 +58,11 @@ monster_x = random.randint(0, TUK_GROUND_FULL_WIDTH)
 monster_y = random.randint(0, TUK_GROUND_FULL_HEIGHT)
 mouse_x = TUK_GROUND_FULL_WIDTH // 2
 mouse_y = TUK_GROUND_FULL_HEIGHT // 2
-dirrl = 0
-dirud = 0
+dirrl, dirud = 0
 rl = 3
 frame = 0
 t = 0
-
+bullets = 6
 
 def running_stop():
     global frame
@@ -164,6 +171,15 @@ def target_moving():
     global mouse_x, mouse_y
     target.draw(mouse_x, mouse_y)
 
+def bullet_printing():
+    global bullets
+    for i in range(bullets):
+        bullet.draw(1200, 100 + (i*30))
+
+def bullet_reloading():
+    global bullets
+    bullets = 6
+
 while running:
     handle_events()
     clear_canvas()
@@ -171,6 +187,7 @@ while running:
     character_moving()
     target_moving()
     monster_moving()
+    bullet_printing()
     update_canvas()
     delay(0.01)
 

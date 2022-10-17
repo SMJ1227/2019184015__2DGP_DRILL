@@ -48,7 +48,7 @@ tuk_ground = load_image('TUK_GROUND.png')
 character = load_image('animation_sheet.png')
 monster = load_image('monster.png')
 target = load_image('target.png')
-bullet = load_image('character.png')
+bullet = load_image('bullet.png')
 hide_cursor()
 
 running = True
@@ -58,7 +58,8 @@ monster_x = random.randint(0, TUK_GROUND_FULL_WIDTH)
 monster_y = random.randint(0, TUK_GROUND_FULL_HEIGHT)
 mouse_x = TUK_GROUND_FULL_WIDTH // 2
 mouse_y = TUK_GROUND_FULL_HEIGHT // 2
-dirrl, dirud = 0
+dirrl = 0
+dirud = 0
 rl = 3
 frame = 0
 t = 0

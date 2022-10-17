@@ -75,7 +75,7 @@ while running:
     clear_canvas()
     tuk_ground.draw(TUK_GROUND_FULL_WIDTH // 2, TUK_GROUND_FULL_HEIGHT // 2)
     if dirrl == 0 and dirud == 0:
-        running_stop(0)
+        running_stop()
     elif dirrl == 1:
         running_right()
         # character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)

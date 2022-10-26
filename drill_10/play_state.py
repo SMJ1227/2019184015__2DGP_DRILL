@@ -3,7 +3,7 @@ import game_framework
 import title_state
 import item_state
 import add_delete_state
-
+import random
 
 class Grass:
     def __init__(self):
@@ -15,8 +15,8 @@ class Grass:
 
 class Boy:
     def __init__(self):
-        self.x, self.y = 0, 90
-        self.frame = 0
+        self.x, self.y = random.randint(0,800), 90
+        self.frame = random.randint(0, 7)
         self.dir = 1
         self.item = None
         self.image = load_image('animation_sheet.png')
@@ -25,7 +25,7 @@ class Boy:
 
     def update(self):
         self.frame = (self.frame + 1) % 8
-        self.x += self.dir * 3
+        self.x += self.dir * 10
         if self.x >= 800:
             self.x = 800
             self.dir = -1
@@ -50,42 +50,39 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN:
-            if event.key == SDLK_ESCAPE:
-                game_framework.quit()#change_state(title_state)
-            elif event.key == SDLK_i:
-                game_framework.push_state(item_state)
-            elif event.key == SDLK_b:
-                game_framework.push_state(add_delete_state)
-
+            match event.key:
+                case pico2d.SDLK_ESCAPE:
+                   #game_framework.quit()
+                    game_framework.change_state(title_state)
+                case pico2d.SDLK_i:
+                    game_framework.push_state(item_state)
+                case pico2d.SDLK_b:
+                    game_framework.push_state(add_delete_state)
     delay(0.01)
 
 
-boy = None
-#boy_number = 1
+boys = []
 grass = None
 running = True
-#team = [Boy() for i in range(11)]
 
-#초기화
 def enter():
-    global boy, grass, running, team
-    boy = Boy()
+    global grass, running, team
+    boys.append(Boy())
+    boys.append(Boy())
     grass = Grass()
     running = True
 
-
-#종료
 def exit():
-    global boy, grass
-    del boy, grass
+    global grass
+    for boy in boys:
+        del boy
+    del grass
 
 
-#월드에 존재하는 객체들을 업데이트
 def update():
-    boy.update()
+    for boy in boys:
+        boy.update()
 
-
-#월드 그리기
 def draw():
     clear_canvas()
     draw_world()
@@ -93,7 +90,19 @@ def draw():
 
 def draw_world():
     grass.draw()
-    boy.draw()
+    for boy in boys:
+        boy.draw()
+
+def add_one_boy():
+    boys.append(Boy())
+
+def delete_one_boy():
+    if len(boys) >= 2:
+        boys.pop() #리스트 맨 마지막 요소를 꺼낸다. 제거와 동일
+
+def set_boy_items(item):
+    for boy in boys:
+        boy.item = item
 
 def pause():
     pass

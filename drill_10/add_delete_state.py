@@ -1,9 +1,8 @@
 from pico2d import *
 import game_framework
-import title_state
 import play_state
 
-#running = True
+running = True
 image = None
 
 def enter():
@@ -16,12 +15,19 @@ def exit():
 
 def update():
     play_state.update()
+    pass
 
 def draw():
     clear_canvas()
     play_state.draw_world()
-    image.draw(400,300)
+    image.draw(400, 300)
     update_canvas()
+
+def pause():
+    pass
+
+def resume():
+    pass
 
 def handle_events():
     events = get_events()
@@ -32,7 +38,9 @@ def handle_events():
             match event.key:
                 case pico2d.SDLK_ESCAPE:
                     game_framework.pop_state()
-                case pico2d.SDLK_j:
+                case pico2d.SDLK_EQUALS:
+                    play_state.add_one_boy()
                     game_framework.pop_state()
-                case pico2d.SDLK_k:
+                case pico2d.SDLK_MINUS:
+                    play_state.delete_one_boy()
                     game_framework.pop_state()

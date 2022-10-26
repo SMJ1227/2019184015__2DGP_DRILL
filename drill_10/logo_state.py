@@ -1,7 +1,7 @@
 from pico2d import *
 import game_framework
 import title_state
-import play_state
+
 
 #running = True
 image = None
@@ -38,6 +38,11 @@ def draw():
     update_canvas()
     pass
 
+def pause():
+    pass
+
+def resume():
+    pass
 
 def handle_events():
     events = get_events()

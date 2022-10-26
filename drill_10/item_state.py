@@ -3,7 +3,7 @@ import game_framework
 import title_state
 import play_state
 
-#running = True
+running = True
 image = None
 
 def enter():
@@ -17,10 +17,16 @@ def exit():
 def update():
     play_state.update()
 
+def pause():
+    pass
+
+def resume():
+    pass
+
 def draw():
     clear_canvas()
     play_state.draw_world()
-    image.draw(400,300)
+    image.draw(400, 300)
     update_canvas()
 
 def handle_events():
@@ -33,11 +39,11 @@ def handle_events():
                 case pico2d.SDLK_ESCAPE:
                     game_framework.pop_state()
                 case pico2d.SDLK_0:
-                    play_state.boy.item = None
+                    play_state.set_boy_items(None)
                     game_framework.pop_state()
                 case pico2d.SDLK_1:
-                    play_state.boy.item = 'Ball'
+                    play_state.set_boy_items('Ball')
                     game_framework.pop_state()
                 case pico2d.SDLK_2:
-                    play_state.boy.item = 'BigBall'
+                    play_state.set_boy_items('BigBall')
                     game_framework.pop_state()

@@ -68,17 +68,22 @@ class RUN:
 class AUTO_RUN:
     def enter(self, event):
         print("ENTER AUTO_RUN")
+        if self.face_dir == 1:
+            self.dir = 1
+        else:
+            self.dir = -1
 
     def exit(self):
         print('EXIT AUTO_RUN')
         self.face_dir = self.dir
+        self.dir = 0
 
     def do(self):
         self.frame = (self.frame + 1) % 8
         self.x += self.dir
-        if self.x == 800:
+        if self.x >= 800:
             self.dir = -1
-        elif self.x == 0:
+        elif self.x <= 0:
             self.dir = 1
 
     def draw(self):
@@ -107,10 +112,10 @@ class SLEEP:
 
 # 상태 변환 기술
 next_state = {
-    SLEEP : {RU: RUN, LU: RUN, RD: RUN, LD: RUN, TIMER: SLEEP},
+    SLEEP : {RU: RUN, LU: RUN, RD: RUN, LD: RUN, TIMER: SLEEP, AUTO: None},
     IDLE : {RU: RUN, LU: RUN, RD: RUN, LD: RUN, TIMER: SLEEP, AUTO: AUTO_RUN},
     RUN : {RU: IDLE, LU: IDLE, RD: RUN, LD: RUN, AUTO: AUTO_RUN},
-    AUTO_RUN : {RU: RUN, LU: RUN, RD: RUN, LD: RUN, AUTO: IDLE}
+    AUTO_RUN : {RU: None, LU: None, RD: RUN, LD: RUN, AUTO: IDLE}
 }
 
 class Boy:
